@@ -1,0 +1,16 @@
+{
+	"ImportPath": "imgprocessor",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/golang/glog",
+			"Rev": "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
+		},
+		{
+			"ImportPath": "github.com/mozillazg/go-pinyin",
+			"Comment": "v0.12.0",
+			"Rev": "ff1ea6f92b184d58c766c60f96a7a9b5f30fb092"
+		}
+	]
+}
