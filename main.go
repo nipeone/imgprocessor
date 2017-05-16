@@ -3,10 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"imgprocessor/process"
+
 	"os"
 
 	"github.com/golang/glog"
+	"github.com/nipeone/imgprocessor/process"
 )
 
 var from string

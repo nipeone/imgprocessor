@@ -2,13 +2,14 @@ package process
 
 import (
 	"fmt"
-	"imgprocessor/file"
+
 	"os"
 	"path"
 	"strconv"
 	"strings"
 
 	pinyin "github.com/mozillazg/go-pinyin"
+	"github.com/nipeone/imgprocessor/file"
 )
 
 var args = pinyin.NewArgs()
