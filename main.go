@@ -18,8 +18,8 @@ var help bool
 
 func init() {
 	flag.BoolVar(&help, "help", false, "the preprocessing command usage")
-	flag.StringVar(&from, "from", "./3", "the path of images need to process")
-	flag.StringVar(&to, "to", "./4", "the path of  processed images")
+	flag.StringVar(&from, "from", "/tensorflow/image/3", "the path of images need to process")
+	flag.StringVar(&to, "to", "/tensorflow/image/4", "the path of  processed images")
 	flag.StringVar(&label, "label", "./labels.txt", "the path of the label")
 	flag.IntVar(&limit, "limit", 100, "the min number of images")
 }
