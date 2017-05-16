@@ -33,8 +33,8 @@ func main() {
 
 func handleHelp() {
 	if help {
-		fmt.Println("--from			the path of images need to process.\n\t\t\tdefault value is ./3")
-		fmt.Println("--to			the path of processed images.\n\t\t\tdefault value is ./4")
+		fmt.Println("--from			the path of images need to process.\n\t\t\tdefault value is /tensorflow/image/3")
+		fmt.Println("--to			the path of processed images.\n\t\t\tdefault value is /tensorflow/image/4")
 		fmt.Println("--label			the path of the label.\n\t\t\tdefault value is ./labels.txt")
 		fmt.Println("--limit			the min number of images to filter.\n\t\t\tdefault value is 100")
 		os.Exit(0)
