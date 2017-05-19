@@ -17,6 +17,7 @@ var limit int
 
 const detail = "./detail.txt"
 const summary = "./summary.txt"
+const vocPath = "./voc.txt"
 
 // Processor 预处理
 type Processor interface {
@@ -43,9 +44,10 @@ func New(from, to string, l int) *ImgProcessor {
 // col1	col2
 // :	:
 // img	label1,label2,label3
-func (p *ImgProcessor) ParseLabel(labelPath string) map[string][]string {
+func (p *ImgProcessor) ParseLabel(labelPath string) (map[string][]string, map[string]string) {
 	lines := file.ReadLines(labelPath)
 	d := make(map[string][]string)
+	voc := make(map[string]string)
 	for _, line := range lines {
 		parts := strings.Split(line, "\t")
 		if len(parts) != 2 {
@@ -56,6 +58,7 @@ func (p *ImgProcessor) ParseLabel(labelPath string) map[string][]string {
 			for _, l := range labels {
 				//将中文转为拼音
 				k := pinyin.Slug(strings.TrimSpace(l), args)
+				voc[k] = strings.TrimSpace(l)
 				if v, ok := d[k]; ok {
 					d[k] = append(v, img)
 				} else {
@@ -64,7 +67,13 @@ func (p *ImgProcessor) ParseLabel(labelPath string) map[string][]string {
 			}
 		}
 	}
-	return d
+	for k, v := range d {
+		if !filter(v) {
+			delete(voc, k)
+			delete(d, k)
+		}
+	}
+	return d, voc
 }
 
 // Process 根据标签解析的键值对，将图片移动到对应分类
@@ -75,19 +84,27 @@ func (p *ImgProcessor) Process(d map[string][]string) {
 	os.Mkdir(p.To, os.ModeDir)
 	count := 0
 	for k, v := range d {
-		if filter(v) {
-			fmt.Println(k, " ", len(v))
-			count++
-			if !file.IsExist(path.Join(p.To, k)) {
-				os.Mkdir(path.Join(p.To, k), os.ModeDir)
-			}
-			for _, f := range v {
-				file.CopyFile(path.Join(p.Fr, f), path.Join(p.To, k, f))
-			}
+		fmt.Println(k, " ", len(v))
+		count++
+		if !file.IsExist(path.Join(p.To, k)) {
+			os.Mkdir(path.Join(p.To, k), os.ModeDir)
+		}
+		for _, f := range v {
+			file.CopyFile(path.Join(p.Fr, f), path.Join(p.To, k, f))
 		}
 	}
 	fmt.Println("the filtered photo limit is ", limit)
 	fmt.Println("total classes:", len(d), "/", "filtered classes:", count)
+}
+
+//Voc 生成中英文对照表
+func (p *ImgProcessor) Voc(d map[string]string) {
+	path := path.Join(p.To, vocPath)
+	lines := []string{}
+	for k, v := range d {
+		lines = append(lines, k+":"+v)
+	}
+	file.WriteLines(path, lines)
 }
 
 func filter(v []string) bool {
@@ -102,11 +119,10 @@ func Detail(d map[string][]string) {
 	// f, _ := os.OpenFile("total.txt", os.O_APPEND, 0666)
 	// 遍历map
 	for k, v := range d {
-		if filter(v) {
-			f.WriteString(k + " " + strconv.Itoa(len(v)) + "\n")
-			f.WriteString(strings.Join(v, "\n") + "\n")
-			f.WriteString("\n")
-		}
+		f.WriteString(k + " " + strconv.Itoa(len(v)) + "\n")
+		f.WriteString(strings.Join(v, "\n") + "\n")
+		f.WriteString("\n")
+
 	}
 
 	defer f.Close()
@@ -120,9 +136,7 @@ func Summary(d map[string][]string) {
 
 	// 遍历map
 	for k, v := range d {
-		if filter(v) {
-			f.WriteString(k + "\t" + strconv.Itoa(len(v)) + "\n")
-		}
+		f.WriteString(k + "\t" + strconv.Itoa(len(v)) + "\n")
 	}
 
 	defer f.Close()

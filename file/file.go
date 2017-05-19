@@ -9,12 +9,31 @@ import (
 	"github.com/golang/glog"
 )
 
+//WriteLines 按行写字符串
+func WriteLines(filePath string, lines []string) error {
+	f, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	if len(lines) != 0 {
+		for _, line := range lines {
+			_, err := f.WriteString(strings.TrimSpace(line) + "\n")
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 //ReadAll 读取文件内容
 func ReadAll(filePath string) ([]byte, error) {
 	f, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 	return ioutil.ReadAll(f)
 }
 
