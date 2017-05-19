@@ -149,9 +149,3 @@ func Summary(d map[string][]string) {
 
 	defer f.Close()
 }
-
-func Test() {
-	py := pinyin.Slug("2015中国人abc", args)
-	fmt.Println(py)
-
-}
