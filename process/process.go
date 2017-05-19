@@ -12,7 +12,7 @@ import (
 	"github.com/nipeone/imgprocessor/file"
 )
 
-var args = pinyin.NewArgs()
+var args pinyin.Args
 var limit int
 
 const detail = "./detail.txt"
@@ -29,6 +29,14 @@ type Processor interface {
 type ImgProcessor struct {
 	Fr string
 	To string
+}
+
+func init() {
+	args = pinyin.NewArgs()
+	args.Separator = ""
+	args.Fallback = func(r rune, a pinyin.Args) []string {
+		return []string{string(r)}
+	}
 }
 
 // New 默认构建函数
@@ -98,10 +106,10 @@ func (p *ImgProcessor) Process(d map[string][]string) {
 }
 
 //Voc 生成中英文对照表
-func (p *ImgProcessor) Voc(d map[string]string) {
+func (p *ImgProcessor) Voc(voc map[string]string) {
 	path := path.Join(p.To, vocPath)
 	lines := []string{}
-	for k, v := range d {
+	for k, v := range voc {
 		lines = append(lines, k+":"+v)
 	}
 	file.WriteLines(path, lines)
@@ -140,4 +148,10 @@ func Summary(d map[string][]string) {
 	}
 
 	defer f.Close()
+}
+
+func Test() {
+	py := pinyin.Slug("2015中国人abc", args)
+	fmt.Println(py)
+
 }

@@ -53,10 +53,12 @@ func start() {
 		}
 	}()
 
-	p := process.New(from, to, limit)
-	d := p.ParseLabel(label)
-	p.Process(d)
-	process.Detail(d)
-	process.Summary(d)
+	// p := process.New(from, to, limit)
+	// d, voc := p.ParseLabel(label)
+	// p.Process(d)
+	// p.Voc(voc)
+	// process.Detail(d)
+	// process.Summary(d)
+	process.Test()
 
 }
