@@ -17,11 +17,9 @@ func WriteLines(filePath string, lines []string) error {
 	}
 	defer f.Close()
 	if len(lines) != 0 {
-		for _, line := range lines {
-			_, err := f.WriteString(strings.TrimSpace(line) + "\n")
-			if err != nil {
-				return err
-			}
+		_, err := f.WriteString(strings.Join(lines, "\n"))
+		if err != nil {
+			return err
 		}
 	}
 	return nil
